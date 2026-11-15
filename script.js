@@ -1,4 +1,3 @@
-
 const screen = document.getElementById("screen");
 
 let userStream = null;
@@ -344,14 +343,24 @@ function startStudy() {
                 </div>
 
 
+                <!-- PARTICIPANT'S LIVE CAMERA FEED -->
+
                 <div class="video-box">
 
-                    <video autoplay loop muted playsinline preload="auto">
-                        <source src="p4.mp4" type="video/mp4">
+                    <video
+                        id="selfVideo"
+                        autoplay
+                        muted
+                        playsinline>
                     </video>
 
+                    <!-- PARTICIPANT'S MICROPHONE STATUS -->
+
                     <div class="mic-overlay">
-                        <img src="mic-muted.svg" alt="Microphone muted">
+                        <img
+                            src="mic-muted.svg"
+                            id="selfMicIcon"
+                            alt="Microphone muted">
                     </div>
 
                 </div>
@@ -395,12 +404,22 @@ function startStudy() {
 
     /* =========================
        MEETING MICROPHONE
-       Preserve device-check choice
+       Synchronize toolbar and
+       participant video tile
     ========================= */
 
     const muteButton = document.getElementById("muteButton");
     const muteIcon = document.getElementById("muteIcon");
     const muteText = document.getElementById("muteText");
+
+    // Elements in the participant's own video tile
+    const selfVideo = document.getElementById("selfVideo");
+    const selfMicIcon = document.getElementById("selfMicIcon");
+
+    // Reuse the camera and microphone stream granted during Device Check
+    if (selfVideo && userStream) {
+        selfVideo.srcObject = userStream;
+    }
 
     const audioTracks = userStream
         ? userStream.getAudioTracks()
@@ -415,11 +434,23 @@ function startStudy() {
             muteIcon.alt = "Microphone muted";
             muteText.innerText = "Unmute";
 
+            // Show muted status in the participant's video tile too
+            if (selfMicIcon) {
+                selfMicIcon.src = "mic-muted.svg";
+                selfMicIcon.alt = "Microphone muted";
+            }
+
         } else {
 
             muteIcon.src = "mic.svg";
             muteIcon.alt = "Microphone on";
             muteText.innerText = "Mute";
+
+            // Show active status in the participant's video tile too
+            if (selfMicIcon) {
+                selfMicIcon.src = "mic.svg";
+                selfMicIcon.alt = "Microphone on";
+            }
 
         }
 
