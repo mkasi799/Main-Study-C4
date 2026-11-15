@@ -1,0 +1,490 @@
+
+/* =========================
+   GENERAL PAGE STYLING
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    color: #000000;
+}
+
+#screen {
+    min-height: 100vh;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+#logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 150px;
+    height: auto;
+}
+
+
+/* =========================
+   INTRO SCREEN
+========================= */
+
+.center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 40px 20px;
+}
+
+.intro-text {
+    width: 850px;
+    max-width: 90vw;
+    margin: 0 auto 30px;
+    text-align: center;
+    font-size: 24px;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+.intro-text p {
+    margin-bottom: 18px;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+    font-family: inherit;
+    font-size: 16px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    background: #000000;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #444444;
+}
+
+button:disabled {
+    background: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   DEVICE CHECK SCREEN
+========================= */
+
+.device-check {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 35px 20px 20px;
+}
+
+.device-check h1 {
+    font-size: 30px;
+    margin: 0 0 14px;
+}
+
+
+/* Camera preview */
+
+.device-preview {
+    width: 420px;
+    max-width: 90vw;
+    height: 240px;
+    background: #222222;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+
+/* Camera instructions */
+
+.device-instructions {
+    width: 1000px;
+    max-width: 90vw;
+    margin: 10px auto;
+    text-align: center;
+    font-size: 20px;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+
+/* Camera status message */
+
+.camera-status {
+    font-size: 13px;
+    color: #666666;
+    margin-top: 8px;
+}
+
+
+/* =========================
+   DEVICE CHECK ICONS
+========================= */
+
+.device-check-controls {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 36px;
+    margin: 14px 0 8px;
+}
+
+.device-check-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: 120px;
+}
+
+
+/* Keep both icon circles the same size
+   and aligned at the top */
+
+.device-check-icon-button,
+.device-check-camera-icon {
+    width: 76px;
+    height: 76px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #eeeeee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Clickable microphone */
+
+.device-check-icon-button {
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.device-check-icon-button:hover {
+    background: #e2e2e2;
+}
+
+.device-check-icon-button:focus-visible {
+    outline: 3px solid #555555;
+    outline-offset: 3px;
+}
+
+
+/* Icons inside circles */
+
+.device-check-icon-button img,
+.device-check-camera-icon img {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+}
+
+
+/* Camera icon is not clickable */
+
+.device-check-camera-icon {
+    cursor: default;
+}
+
+
+/* Labels beneath icons */
+
+.device-check-control-label {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    color: #222222;
+    min-height: 18px;
+}
+
+
+/* Helper text beneath labels */
+
+.device-check-helper {
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    color: #666666;
+    max-width: 120px;
+    min-height: 30px;
+}
+
+
+/* =========================
+   MEETING INTERFACE
+========================= */
+
+.meeting-interface {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+
+/* Top bar */
+
+.top-ui {
+    height: 45px;
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #222222;
+    color: #ffffff;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+
+/* Video grid */
+
+.meeting-room {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 10px;
+    padding: 12px;
+    background: #111111;
+    overflow: hidden;
+}
+
+
+/* Individual video boxes */
+
+.video-box {
+    position: relative;
+    overflow: hidden;
+    background: #222222;
+    border-radius: 8px;
+    min-height: 0;
+    min-width: 0;
+}
+
+.video-box video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Microphone overlays */
+
+.mic-overlay {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.65);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mic-overlay img {
+    width: 18px;
+    height: 18px;
+    filter: brightness(0) invert(1);
+}
+
+
+/* Bottom bar */
+
+.bottom-ui {
+    height: 65px;
+    min-height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    background: #222222;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+
+
+/* Meeting controls */
+
+.control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.control .icon {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
+
+/* =========================
+   MEETING COMPLETE PAGE
+========================= */
+
+.meeting-complete-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: #ffffff;
+}
+
+.meeting-complete-message {
+    max-width: 700px;
+    text-align: center;
+}
+
+.meeting-complete-message h2 {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.meeting-complete-message p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+
+/* =========================
+   MOBILE ADJUSTMENTS
+========================= */
+
+@media (max-width: 600px) {
+
+    #logo {
+        width: 110px;
+        top: 15px;
+        left: 15px;
+    }
+
+    .device-check {
+        padding-top: 70px;
+    }
+
+    .device-check h1 {
+        font-size: 26px;
+    }
+
+    .device-preview {
+        height: 200px;
+    }
+
+    .device-check-controls {
+        gap: 24px;
+    }
+
+    .device-check-icon-button,
+    .device-check-camera-icon {
+        width: 68px;
+        height: 68px;
+    }
+
+    .device-check-icon-button img,
+    .device-check-camera-icon img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .device-check-control {
+        width: 110px;
+    }
+
+    .meeting-room {
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .bottom-ui {
+        height: 60px;
+        min-height: 60px;
+        gap: 24px;
+    }
+}
+
+
+/* =========================
+   SHORT SCREEN ADJUSTMENTS
+========================= */
+
+/* Makes the camera check more compact on
+   shorter laptop screens */
+
+@media (min-width: 601px) and (max-height: 800px) {
+
+    .device-check {
+        padding-top: 20px;
+        padding-bottom: 12px;
+    }
+
+    .device-check h1 {
+        margin-bottom: 10px;
+    }
+
+    .device-preview {
+        height: 200px;
+    }
+
+    .device-instructions {
+        margin: 8px auto;
+        line-height: 1.4;
+    }
+
+    .camera-status {
+        margin-top: 5px;
+    }
+
+    .device-check-controls {
+        margin: 10px 0 4px;
+    }
+
+    .device-check-icon-button,
+    .device-check-camera-icon {
+        width: 68px;
+        height: 68px;
+    }
+
+    .device-check-icon-button img,
+    .device-check-camera-icon img {
+        width: 30px;
+        height: 30px;
+    }
+}
