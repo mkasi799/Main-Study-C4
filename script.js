@@ -31,11 +31,10 @@ function renderIntro() {
 
             <div class="intro-text">
                 <p>
-                    You will participate in a brief virtual meeting with other participants. During the meeting, your self-view will be hidden to reduce distractions and standardize the participant experience.
-                </p>
+                    You will participate in a brief virtual meeting with other participants.
 
                 <p>
-                    Although you will not be able to see your own video feed, your camera will remain on throughout the interaction, and your video will be visible to the other participants. Likewise, you will be able to see other participants. Please remain connected until the meeting concludes.
+                    Please remain connected until the meeting concludes.
                 </p>
             </div>
 
