@@ -1,3 +1,4 @@
+
 const screen = document.getElementById("screen");
 
 let userStream = null;
@@ -290,6 +291,10 @@ async function renderDeviceCheck() {
 
 function startStudy() {
 
+    // Record the exact meeting start time.
+    const meetingStartTime = Date.now();
+
+
     screen.innerHTML = `
         <div class="meeting-interface">
 
@@ -304,9 +309,14 @@ function startStudy() {
 
             <div class="meeting-room">
 
-                <!-- UPPER LEFT: JOINS AT 15 SECONDS -->
+                <!-- UPPER LEFT: C4_P1
+                     Starts immediately.
+                     Appears at 15 seconds. -->
 
-                <div class="video-box">
+                <div
+                    class="video-box"
+                    id="upperLeftBox"
+                    style="visibility: hidden;">
 
                     <video
                         id="upperLeftVideo"
@@ -314,17 +324,25 @@ function startStudy() {
                         loop
                         muted
                         playsinline
-                        preload="none">
+                        preload="auto">
                     </video>
 
-                    <div class="mic-overlay" id="upperLeftMic" style="display: none;">
-                        <img src="mic-muted.svg" alt="Microphone muted">
+                    <div
+                        class="mic-overlay"
+                        id="upperLeftMic"
+                        style="display: none;">
+
+                        <img
+                            src="mic-muted.svg"
+                            alt="Microphone muted">
+
                     </div>
 
                 </div>
 
 
-                <!-- UPPER RIGHT: JOINS IMMEDIATELY -->
+                <!-- UPPER RIGHT: C4_P3
+                     Starts and appears immediately. -->
 
                 <div class="video-box">
 
@@ -332,21 +350,30 @@ function startStudy() {
                         id="upperRightVideo"
                         autoplay
                         loop
-                        muted
                         playsinline
                         preload="auto">
                     </video>
 
                     <div class="mic-overlay" id="speakerMic">
-                        <img src="mic-muted.svg" alt="Microphone muted">
+
+                        <img
+                            src="mic-muted.svg"
+                            id="speakerMicIcon"
+                            alt="Microphone muted">
+
                     </div>
 
                 </div>
 
 
-                <!-- BOTTOM LEFT: JOINS AT 8 SECONDS -->
+                <!-- BOTTOM LEFT: C4_P2
+                     Starts immediately.
+                     Appears at 8 seconds. -->
 
-                <div class="video-box">
+                <div
+                    class="video-box"
+                    id="bottomLeftBox"
+                    style="visibility: hidden;">
 
                     <video
                         id="bottomLeftVideo"
@@ -354,11 +381,18 @@ function startStudy() {
                         loop
                         muted
                         playsinline
-                        preload="none">
+                        preload="auto">
                     </video>
 
-                    <div class="mic-overlay" id="bottomLeftMic" style="display: none;">
-                        <img src="mic-muted.svg" alt="Microphone muted">
+                    <div
+                        class="mic-overlay"
+                        id="bottomLeftMic"
+                        style="display: none;">
+
+                        <img
+                            src="mic-muted.svg"
+                            alt="Microphone muted">
+
                     </div>
 
                 </div>
@@ -378,10 +412,12 @@ function startStudy() {
                     <!-- PARTICIPANT'S MICROPHONE STATUS -->
 
                     <div class="mic-overlay">
+
                         <img
                             src="mic-muted.svg"
                             id="selfMicIcon"
                             alt="Microphone muted">
+
                     </div>
 
                 </div>
@@ -424,68 +460,113 @@ function startStudy() {
 
 
     /* =========================
-       VIDEO JOIN TIMING
+       VIDEO PLAYBACK
+       ALL VIDEOS START AT 0
     ========================= */
 
-    // UPPER RIGHT VIDEO
-    // Joins immediately when the meeting begins
 
-    const upperRightVideo = document.getElementById("upperRightVideo");
+    // C4_P3: UPPER RIGHT
+    // Starts immediately.
+    // Actual audio is UNMUTED throughout.
+
+    const upperRightVideo =
+        document.getElementById("upperRightVideo");
 
     upperRightVideo.src = "C4_P3.mp4";
+    upperRightVideo.muted = false;
     upperRightVideo.load();
-    upperRightVideo.play().catch(() => {});
 
 
-    // BOTTOM LEFT VIDEO
-    // Joins 8 seconds after the meeting begins
+    // C4_P2: BOTTOM LEFT
+    // Starts immediately.
+    // Actual audio is muted.
+    // Tile appears at 8 seconds.
+
+    const bottomLeftVideo =
+        document.getElementById("bottomLeftVideo");
+
+    const bottomLeftBox =
+        document.getElementById("bottomLeftBox");
+
+    const bottomLeftMic =
+        document.getElementById("bottomLeftMic");
+
+    bottomLeftVideo.src = "C4_P2.mp4";
+    bottomLeftVideo.muted = true;
+    bottomLeftVideo.load();
+
+
+    // C4_P1: UPPER LEFT
+    // Starts immediately.
+    // Actual audio is muted.
+    // Tile appears at 15 seconds.
+
+    const upperLeftVideo =
+        document.getElementById("upperLeftVideo");
+
+    const upperLeftBox =
+        document.getElementById("upperLeftBox");
+
+    const upperLeftMic =
+        document.getElementById("upperLeftMic");
+
+    upperLeftVideo.src = "C4_P1.mp4";
+    upperLeftVideo.muted = true;
+    upperLeftVideo.load();
+
+
+    // Start all three videos together rather than
+    // waiting until their respective tiles appear.
+
+    const videoPlaybackPromises = [
+        upperRightVideo.play(),
+        bottomLeftVideo.play(),
+        upperLeftVideo.play()
+    ];
+
+    videoPlaybackPromises.forEach((promise, index) => {
+
+        promise.catch(error => {
+            console.error(
+                "Confederate video playback error:",
+                index,
+                error
+            );
+        });
+
+    });
+
+
+    /* =========================
+       VIDEO TILE VISIBILITY
+    ========================= */
+
+
+    // C4_P2 appears at 8 seconds.
 
     setTimeout(() => {
 
-        const bottomLeftVideo = document.getElementById("bottomLeftVideo");
+        if (bottomLeftBox) {
+            bottomLeftBox.style.visibility = "visible";
+        }
 
-        if (bottomLeftVideo) {
-
-            const bottomLeftMic = document.getElementById("bottomLeftMic");
-
-            // Show microphone icon only after the first video frame loads
-            bottomLeftVideo.addEventListener("loadeddata", () => {
-                if (bottomLeftMic) {
-                    bottomLeftMic.style.display = "flex";
-                }
-            }, { once: true });
-
-            bottomLeftVideo.src = "C4_P2.mp4";
-            bottomLeftVideo.load();
-            bottomLeftVideo.play().catch(() => {});
-
+        if (bottomLeftMic) {
+            bottomLeftMic.style.display = "flex";
         }
 
     }, 8000);
 
 
-    // UPPER LEFT VIDEO
-    // Joins 15 seconds after the meeting begins
+    // C4_P1 appears at 15 seconds.
 
     setTimeout(() => {
 
-        const upperLeftVideo = document.getElementById("upperLeftVideo");
+        if (upperLeftBox) {
+            upperLeftBox.style.visibility = "visible";
+        }
 
-        if (upperLeftVideo) {
-
-            const upperLeftMic = document.getElementById("upperLeftMic");
-
-            // Show microphone icon only after the first video frame loads
-            upperLeftVideo.addEventListener("loadeddata", () => {
-                if (upperLeftMic) {
-                    upperLeftMic.style.display = "flex";
-                }
-            }, { once: true });
-
-            upperLeftVideo.src = "C4_P1.mp4";
-            upperLeftVideo.load();
-            upperLeftVideo.play().catch(() => {});
-
+        if (upperLeftMic) {
+            upperLeftMic.style.display = "flex";
         }
 
     }, 15000);
@@ -493,22 +574,32 @@ function startStudy() {
 
     /* =========================
        MEETING MICROPHONE
-       Synchronize toolbar and
-       participant video tile
+       PARTICIPANT CONTROLS
     ========================= */
 
-    const muteButton = document.getElementById("muteButton");
-    const muteIcon = document.getElementById("muteIcon");
-    const muteText = document.getElementById("muteText");
+    const muteButton =
+        document.getElementById("muteButton");
 
-    // Elements in the participant's own video tile
-    const selfVideo = document.getElementById("selfVideo");
-    const selfMicIcon = document.getElementById("selfMicIcon");
+    const muteIcon =
+        document.getElementById("muteIcon");
 
-    // Reuse the camera and microphone stream granted during Device Check
+    const muteText =
+        document.getElementById("muteText");
+
+    const selfVideo =
+        document.getElementById("selfVideo");
+
+    const selfMicIcon =
+        document.getElementById("selfMicIcon");
+
+
+    // Reuse the camera and microphone stream
+    // granted during Device Check.
+
     if (selfVideo && userStream) {
         selfVideo.srcObject = userStream;
     }
+
 
     const audioTracks = userStream
         ? userStream.getAudioTracks()
@@ -523,7 +614,6 @@ function startStudy() {
             muteIcon.alt = "Microphone muted";
             muteText.innerText = "Unmute";
 
-            // Show muted status in the participant's video tile too
             if (selfMicIcon) {
                 selfMicIcon.src = "mic-muted.svg";
                 selfMicIcon.alt = "Microphone muted";
@@ -535,7 +625,6 @@ function startStudy() {
             muteIcon.alt = "Microphone on";
             muteText.innerText = "Mute";
 
-            // Show active status in the participant's video tile too
             if (selfMicIcon) {
                 selfMicIcon.src = "mic.svg";
                 selfMicIcon.alt = "Microphone on";
@@ -563,47 +652,69 @@ function startStudy() {
 
 
     /* =========================
-       SPEAKER MICROPHONE TIMING
+       C4_P3 SPEAKER MICROPHONE
+       ICON TIMING
     ========================= */
 
-    // Hide speaker microphone at 40 seconds
+    const speakerMicIcon =
+        document.getElementById("speakerMicIcon");
+
+
+    // 0–54 seconds:
+    // Microphone icon remains MUTED.
+
+    speakerMicIcon.src = "mic-muted.svg";
+    speakerMicIcon.alt = "Microphone muted";
+
+
+    // At 55 seconds:
+    // Change icon to UNMUTED.
 
     setTimeout(() => {
 
-        const speakerMic = document.getElementById("speakerMic");
+        if (speakerMicIcon) {
 
-        if (speakerMic) {
-            speakerMic.style.display = "none";
-        }
+            speakerMicIcon.src = "mic.svg";
+            speakerMicIcon.alt = "Microphone on";
 
-    }, 40000);
-
-
-    // Show speaker microphone again at 55 seconds
-    // Use flex to keep the icon centered
-
-    setTimeout(() => {
-
-        const speakerMic = document.getElementById("speakerMic");
-
-        if (speakerMic) {
-            speakerMic.style.display = "flex";
         }
 
     }, 55000);
 
 
+    // At 62 seconds (1 minute 2 seconds):
+    // Change icon back to MUTED.
+
+    setTimeout(() => {
+
+        if (speakerMicIcon) {
+
+            speakerMicIcon.src = "mic-muted.svg";
+            speakerMicIcon.alt = "Microphone muted";
+
+        }
+
+    }, 62000);
+
+
     /* =========================
        MEETING END
-       Separate page appears at
-       57 seconds.
+       80 SECONDS
     ========================= */
+
+    const elapsedTime = Date.now() - meetingStartTime;
+
+    const remainingTime = Math.max(
+        0,
+        80000 - elapsedTime
+    );
+
 
     setTimeout(() => {
 
         renderMeetingCompletePage();
 
-    }, 57000);
+    }, remainingTime);
 
 }
 
@@ -638,23 +749,43 @@ function renderMeetingCompletePage() {
     document.getElementById("continueBtn").onclick = () => {
 
         // Get the condition assigned by Qualtrics
-        const urlParameters = new URLSearchParams(window.location.search);
-        const condition = urlParameters.get("Condition");
+
+        const urlParameters =
+            new URLSearchParams(window.location.search);
+
+        const condition =
+            urlParameters.get("Condition");
+
 
         // Survey 2 URL
-        const surveyTwoURL = "https://mtroyal.ca1.qualtrics.com/jfe/form/SV_eeYZBrtYNYWNx1c";
+
+        const surveyTwoURL =
+            "https://mtroyal.ca1.qualtrics.com/jfe/form/SV_eeYZBrtYNYWNx1c";
+
 
         // Make sure the condition was successfully received
+
         if (!condition) {
-            alert("Your study condition could not be retrieved. Please contact the researcher.");
+
+            alert(
+                "Your study condition could not be retrieved. Please contact the researcher."
+            );
+
             return;
+
         }
 
+
         // Add the condition to the Survey 2 URL
-        const separator = surveyTwoURL.includes("?") ? "&" : "?";
+
+        const separator =
+            surveyTwoURL.includes("?") ? "&" : "?";
 
         window.location.href =
-            surveyTwoURL + separator + "Condition=" + encodeURIComponent(condition);
+            surveyTwoURL +
+            separator +
+            "Condition=" +
+            encodeURIComponent(condition);
 
     };
 
