@@ -432,7 +432,7 @@ function startStudy() {
 
     const upperRightVideo = document.getElementById("upperRightVideo");
 
-    upperRightVideo.src = "control_clip.mp4";
+    upperRightVideo.src = "C4_P3.mp4";
     upperRightVideo.load();
     upperRightVideo.play().catch(() => {});
 
@@ -455,7 +455,7 @@ function startStudy() {
                 }
             }, { once: true });
 
-            bottomLeftVideo.src = "p3.mp4";
+            bottomLeftVideo.src = "C4_P2.mp4";
             bottomLeftVideo.load();
             bottomLeftVideo.play().catch(() => {});
 
@@ -482,7 +482,7 @@ function startStudy() {
                 }
             }, { once: true });
 
-            upperLeftVideo.src = "p1.mp4";
+            upperLeftVideo.src = "C4_P1.mp4";
             upperLeftVideo.load();
             upperLeftVideo.play().catch(() => {});
 
